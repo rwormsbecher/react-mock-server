@@ -11,3 +11,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.float-right {
+  float: right;
+  padding: 0 0 0 4em;
+}
+
+.fake-link {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.fake-link:hover {
+  color: #0069d9;
+  text-decoration: underline;
+}
