@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import { Alert, Button, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from 'reactstrap';
 import { JsxElement } from 'typescript';
 import { NavbarComponent } from './components/Navbar';
@@ -6,6 +7,8 @@ import { IEmployee } from './models/IEmployee';
 import { getEmployees } from './services/employee.service';
 
 function App() {
+    const history = useHistory();
+
     const [loading, setLoading] = useState<boolean>(false);
     const [employees, setEmployees] = useState<IEmployee[]>([]);
     const [error, setError] = useState<string>('');
@@ -64,19 +67,37 @@ function App() {
             <NavbarComponent />
 
             <Container>
-                <Row className="mt-5 mb-5">
-                    <Col md={{ size: 3, offset: 9 }}>
-                        <div className="float-right">
-                            <Button color="primary">Add employee</Button>
-                        </div>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md="12">
-                        {notification}
-                        {content}
-                    </Col>
-                </Row>
+                <Switch>
+                    <Route path="/add">
+                        <Row className="mt-5 mb-5">
+                            <p>Add route</p>
+                        </Row>
+                    </Route>
+
+                    <Route path="/edit">
+                        <Row className="mt-5 mb-5">
+                            <p>Edit route</p>
+                        </Row>
+                    </Route>
+
+                    <Route path="/">
+                        <Row className="mt-5 mb-5">
+                            <Col md={{ size: 3, offset: 9 }}>
+                                <div className="float-right">
+                                    <Button color="primary" onClick={() => history.push('/add')}>
+                                        Add employee
+                                    </Button>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="12">
+                                {notification}
+                                {content}
+                            </Col>
+                        </Row>
+                    </Route>
+                </Switch>
             </Container>
         </div>
     );
