@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
-import { Alert, Button, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from 'reactstrap';
-import { JsxElement } from 'typescript';
+import { Button, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from 'reactstrap';
 import { NavbarComponent } from './components/Navbar';
 import { IEmployee } from './models/IEmployee';
 import { getEmployees } from './services/employee.service';
+import { AddEmployeeForm } from './pages/AddEmployee';
 
 function App() {
     const history = useHistory();
@@ -70,7 +70,7 @@ function App() {
                 <Switch>
                     <Route path="/add">
                         <Row className="mt-5 mb-5">
-                            <p>Add route</p>
+                            <AddEmployeeForm />
                         </Row>
                     </Route>
 

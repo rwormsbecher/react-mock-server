@@ -37,3 +37,44 @@ export const getEmployees = async() => {
     }
 }
 
+export const createEmployee = async (body: IEmployee, history: any) => {
+    try {
+        const employeesResponse = await fetch(`http://localhost:3000/employees`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+
+        if (employeesResponse.status !== 201) {
+            const response: IHttpResponse = {
+                status: employeesResponse.status,
+                error: {message: employeesResponse.statusText},
+                data: {content: ''}
+            }
+            return response
+        }
+
+        const employeeResult: IEmployee[] = await employeesResponse.json();
+        const response: IHttpResponse = {
+            status: employeesResponse.status,
+            error: {message: ''},
+            data: {content: employeeResult}
+        }
+
+        history.push({
+            pathname: '/',
+            state: { detail: 'reload', response: response },
+        });
+        
+    } catch (error) {
+        console.log('error while creating', error);
+        const response: IHttpResponse = {
+            status: error.status,
+            error: {message: error.statusText},
+            data: {content: ''}
+        }
+        return response;
+    }
+}
