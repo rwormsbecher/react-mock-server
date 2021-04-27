@@ -16,6 +16,7 @@ export const AddEmployeeForm = () => {
 
     const [gender, setGender] = useState<IOptionType>({ label: gendersList[0].label, value: gendersList[0].value });
     const [status, setStatus] = useState<IOptionType>({ label: statusList[0].label, value: statusList[0].value });
+    const [error, setError] = useState<string>('');
 
     const validationSchema = yup.object().shape({
         firstname: yup.string().required().min(2),
@@ -49,8 +50,6 @@ export const AddEmployeeForm = () => {
     };
 
     const onSubmit = async (data: any) => {
-        console.log('errors', errors);
-
         const body: IEmployee = {
             first_name: data.firstname,
             last_name: data.lastname,
@@ -59,13 +58,15 @@ export const AddEmployeeForm = () => {
             status: status.value ? status.value : '',
         };
 
-        console.log('Data', body);
-
-        createEmployee(body, history);
+        const error = await createEmployee(body, history);
+        if (error) {
+            setError(error?.error?.message);
+        }
     };
 
     return (
         <div className="col-12">
+            {error ? <p className="text-danger">There was an error: {error}</p> : null}
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormGroup>
                     <Label for="firstname">First name</Label>

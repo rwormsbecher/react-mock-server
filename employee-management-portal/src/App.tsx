@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Button, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from 'reactstrap';
 import { NavbarComponent } from './components/Navbar';
 import { IEmployee } from './models/IEmployee';
 import { getEmployees } from './services/employee.service';
 import { AddEmployeeForm } from './pages/AddEmployee';
+import { string } from 'yup/lib/locale';
+import { IHttpResponse } from './models/IHttpResponse';
 
 function App() {
     const history = useHistory();
+    const location = useLocation<{ detail: string; result: IHttpResponse }>();
 
     const [loading, setLoading] = useState<boolean>(false);
     const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -20,6 +23,10 @@ function App() {
         setLoading(true);
         getAllEmployees();
     }, []);
+
+    useEffect(() => {
+        getAllEmployees();
+    }, [location?.state?.detail]);
 
     const getAllEmployees = async () => {
         const employees = await getEmployees();

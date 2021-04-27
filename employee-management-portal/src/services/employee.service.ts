@@ -56,16 +56,16 @@ export const createEmployee = async (body: IEmployee, history: any) => {
             return response
         }
 
-        const employeeResult: IEmployee[] = await employeesResponse.json();
-        const response: IHttpResponse = {
+        const employeeResponse: IEmployee[] = await employeesResponse.json();
+        const employeeResult: IHttpResponse = {
             status: employeesResponse.status,
             error: {message: ''},
-            data: {content: employeeResult}
+            data: {content: employeeResponse}
         }
 
         history.push({
             pathname: '/',
-            state: { detail: 'reload', response: response },
+            state: { detail: 'reload', result: employeeResult },
         });
         
     } catch (error) {
