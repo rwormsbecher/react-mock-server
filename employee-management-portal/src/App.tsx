@@ -5,12 +5,14 @@ import { NavbarComponent } from './components/Navbar';
 import { IEmployee } from './models/IEmployee';
 import { getEmployees } from './services/employee.service';
 import { AddEmployeeForm } from './pages/AddEmployee';
-import { string } from 'yup/lib/locale';
 import { IHttpResponse } from './models/IHttpResponse';
+import { EditEmployeeForm } from './pages/EditEmployee';
 
 function App() {
-    const history = useHistory();
+    const history: any = useHistory();
     const location = useLocation<{ detail: string; result: IHttpResponse }>();
+
+    console.log('loc', location?.state?.result);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [employees, setEmployees] = useState<IEmployee[]>([]);
@@ -48,7 +50,11 @@ function App() {
                     <span className="float-right fake-link" role="link">
                         Delete
                     </span>
-                    <span className="float-right fake-link" role="link">
+                    <span
+                        className="float-right fake-link"
+                        role="link"
+                        onClick={() => history.push({ pathname: '/edit', state: { employee } })}
+                    >
                         Edit
                     </span>
                 </ListGroupItem>
@@ -59,6 +65,10 @@ function App() {
 
     if (error) {
         notification = <p className="text-danger">The following error occured: {error}</p>;
+    } else if (location?.state?.result?.status === 201) {
+        notification = <p className="text-success">Employee added.</p>;
+    } else if (location?.state?.result?.status === 200) {
+        notification = <p className="text-success">Employee updated.</p>;
     }
 
     if (loading) {
@@ -83,7 +93,7 @@ function App() {
 
                     <Route path="/edit">
                         <Row className="mt-5 mb-5">
-                            <p>Edit route</p>
+                            <EditEmployeeForm />
                         </Row>
                     </Route>
 
