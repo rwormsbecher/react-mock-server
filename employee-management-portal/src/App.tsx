@@ -3,7 +3,7 @@ import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Button, Col, Container, ListGroup, ListGroupItem, Row, Spinner } from 'reactstrap';
 import { NavbarComponent } from './components/Navbar';
 import { IEmployee } from './models/IEmployee';
-import { getEmployees } from './services/employee.service';
+import { deleteEmployee, getEmployees } from './services/employee.service';
 import { AddEmployeeForm } from './pages/AddEmployee';
 import { IHttpResponse } from './models/IHttpResponse';
 import { EditEmployeeForm } from './pages/EditEmployee';
@@ -12,14 +12,14 @@ function App() {
     const history: any = useHistory();
     const location = useLocation<{ detail: string; result: IHttpResponse }>();
 
-    console.log('loc', location?.state?.result);
-
     const [loading, setLoading] = useState<boolean>(false);
     const [employees, setEmployees] = useState<IEmployee[]>([]);
     const [error, setError] = useState<string>('');
 
-    let content: any = null;
+    let content = null;
     let notification: any = null;
+
+    console.log('43747802478487092348790', process.env);
 
     useEffect(() => {
         setLoading(true);
@@ -41,33 +41,46 @@ function App() {
         }
     };
 
+    async function deleteEmployeeHandler(employeeId: number) {
+        await deleteEmployee(employeeId);
+        await getAllEmployees();
+    }
+
     function renderEmployeeUi() {
         if (loading) setLoading(false);
-        const employeeListItems = employees.map((employee: IEmployee) => {
-            return (
-                <ListGroupItem key={employee.id}>
-                    {`${employee.first_name} ${employee.last_name}`}
-                    <span className="float-right fake-link" role="link">
-                        Delete
-                    </span>
-                    <span
-                        className="float-right fake-link"
-                        role="link"
-                        onClick={() => history.push({ pathname: '/edit', state: { employee } })}
-                    >
-                        Edit
-                    </span>
-                </ListGroupItem>
-            );
-        });
-        content = <ListGroup>{employeeListItems}</ListGroup>;
+        if (employees.length > 0) {
+            const employeeListItems = employees.map((employee: IEmployee) => {
+                return (
+                    <ListGroupItem key={employee.id}>
+                        {`${employee.first_name} ${employee.last_name}`}
+                        <span
+                            className="float-right fake-link"
+                            role="link"
+                            onClick={() => deleteEmployeeHandler(employee.id)}
+                        >
+                            Delete
+                        </span>
+                        <span
+                            className="float-right fake-link"
+                            role="link"
+                            onClick={() => history.push({ pathname: '/edit', state: { employee } })}
+                        >
+                            Edit
+                        </span>
+                    </ListGroupItem>
+                );
+            });
+            content = <ListGroup>{employeeListItems}</ListGroup>;
+        }
     }
+
+    console.log('---00', location?.state?.result);
 
     if (error) {
         notification = <p className="text-danger">The following error occured: {error}</p>;
-    } else if (location?.state?.result?.status === 201) {
+    } else if (location?.state?.result?.status === 201 && !error) {
         notification = <p className="text-success">Employee added.</p>;
-    } else if (location?.state?.result?.status === 200) {
+    } else if (location?.state?.result?.status === 200 && !error) {
         notification = <p className="text-success">Employee updated.</p>;
     }
 

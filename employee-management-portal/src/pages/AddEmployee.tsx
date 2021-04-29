@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { gendersList, statusList } from '../models/lists/formLists';
 import { IOptionType } from '../models/IOptionType';
 import { createEmployee } from '../services/employee.service';
-import { IEmployee } from './../models/IEmployee';
+import { IEmployeeCreateVm } from '../models/IEmployeeCreateVm';
 
 export const AddEmployeeForm = () => {
     const history = useHistory();
@@ -50,7 +50,7 @@ export const AddEmployeeForm = () => {
     };
 
     const onSubmit = async (data: any) => {
-        const body: IEmployee = {
+        const body: IEmployeeCreateVm = {
             first_name: data.firstname,
             last_name: data.lastname,
             email: data.email,

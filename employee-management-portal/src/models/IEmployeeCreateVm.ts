@@ -1,5 +1,4 @@
-export interface IEmployee {
-    id: number;
+export interface IEmployeeCreateVm {
     first_name: string;
     last_name: string;
     email: string;
